@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { StoreProviders } from "@/components/store-providers";
 import { SiteHeader } from "@/components/site-header";
@@ -8,6 +9,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://chronolux.example";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  verification: {
+    google: "EXTHRYFHx4n9wblS0y1ALMV_JsNER9Y2TAYB8O5huGE",
+  },
   title: {
     default: "ChronoLux — Time, Engineered for You.",
     template: "%s | ChronoLux",
@@ -35,6 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main>{children}</main>
           <SiteFooter />
         </StoreProviders>
+        <Analytics />
       </body>
     </html>
   );
