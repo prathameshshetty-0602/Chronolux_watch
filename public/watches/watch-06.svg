@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 800" role="img" aria-labelledby="title">
+  <title id="title">ChronoLux sample watch 06</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e1a2d"/><stop offset="1" stop-color="#0a0d11"/></linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4eee1"/><stop offset=".24" stop-color="#dedcf4"/><stop offset=".5" stop-color="#757a79"/><stop offset=".76" stop-color="#dedcf4"/><stop offset="1" stop-color="#343a3d"/></linearGradient>
+    <linearGradient id="strap" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#080a0c"/><stop offset=".5" stop-color="#8c88c9"/><stop offset="1" stop-color="#101317"/></linearGradient>
+    <radialGradient id="dial" cx=".35" cy=".22" r=".9"><stop offset="0" stop-color="#46515a"/><stop offset=".36" stop-color="#192127"/><stop offset="1" stop-color="#080b0e"/></radialGradient>
+    <filter id="shadow" x="-.5" y="-.5" width="2" height="2"><feGaussianBlur stdDeviation="16"/></filter>
+  </defs>
+  <rect width="720" height="800" rx="40" fill="url(#bg)"/>
+  <circle cx="555" cy="140" r="175" fill="#8c88c9" opacity=".09"/><circle cx="122" cy="682" r="230" fill="#9da6ac" opacity=".035"/>
+  <ellipse cx="365" cy="686" rx="190" ry="33" fill="#000" opacity=".62" filter="url(#shadow)"/>
+  <g transform="rotate(-13 360 400)">
+    <path d="M290 83 Q360 54 430 83 L414 285 Q360 318 306 285 Z" fill="url(#strap)"/>
+    <path d="M306 515 Q360 483 414 515 L430 716 Q360 745 290 716 Z" fill="url(#strap)"/>
+    <path d="M326 101 L394 101 L384 258 L336 258 Z" fill="#0b0e10" opacity=".58"/>
+    <path d="M337 536 L383 536 L394 700 L326 700 Z" fill="#090b0c" opacity=".58"/>
+    <path d="M342 652 L378 652 L382 706 L338 706 Z" fill="url(#metal)"/>
+    <rect x="341" y="683" width="38" height="15" rx="6" fill="#8c88c9"/>
+    <rect x="306" y="257" width="108" height="286" rx="50" fill="url(#metal)"/>
+    <rect x="323" y="274" width="74" height="252" rx="36" fill="#14191d"/>
+    <circle cx="360" cy="400" r="151" fill="#050708" opacity=".42"/>
+    <circle cx="360" cy="400" r="143" fill="url(#metal)"/><circle cx="360" cy="400" r="128" fill="url(#dial)"/>
+    <circle cx="360" cy="400" r="112" fill="none" stroke="#8c88c9" stroke-opacity=".55" stroke-width="1.5"/>
+    <g stroke="#dedbd2" stroke-linecap="round" opacity=".9">
+      <path d="M360 289 v13" stroke-width="3"/><path d="M360 498 v13" stroke-width="3"/>
+      <path d="M249 400 h13" stroke-width="3"/><path d="M458 400 h13" stroke-width="3"/>
+      <path d="M305 304 l7 11"/><path d="M416 485 l7 11"/><path d="M416 315 l-7 11"/><path d="M305 496 l7-11"/>
+    </g>
+    <circle cx="360" cy="400" r="7" fill="#8c88c9"/>
+    <path d="M360 399 L360 325" stroke="#eee9de" stroke-width="4" stroke-linecap="round"/>
+    <path d="M360 400 L422 421" stroke="#8c88c9" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="360" cy="400" r="18" fill="none" stroke="#fff" stroke-opacity=".08"/>
+    <rect x="468" y="383" width="19" height="34" rx="8" fill="url(#metal)"/><circle cx="478" cy="400" r="5" fill="#8c88c9"/>
+    <path d="M268 365 Q279 288 355 273" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="44" y="745" fill="#e8e3d8" opacity=".66" font-family="Arial,sans-serif" font-size="14" letter-spacing="5">CHRONOLUX / ATELIER 06</text>
+</svg>

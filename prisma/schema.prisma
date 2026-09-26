@@ -1,0 +1,335 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProductType {
+  SMART
+  LUXURY
+  ANALOG
+  DIGITAL
+  SPORTS
+  CASUAL
+  AUTOMATIC
+  MECHANICAL
+  CHRONOGRAPH
+  COUPLE
+}
+
+enum Gender {
+  MEN
+  WOMEN
+  KIDS
+  UNISEX
+  COUPLES
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  TEST_PAID
+  FAILED
+  REFUNDED
+}
+
+enum ReviewStatus {
+  PUBLISHED
+  HIDDEN
+}
+
+model User {
+  id             String               @id @default(cuid())
+  name           String
+  email          String               @unique
+  phone          String?
+  passwordHash   String
+  role           Role                 @default(USER)
+  isActive       Boolean              @default(true)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  cart           Cart?
+  wishlist       Wishlist?
+  addresses      Address[]
+  orders         Order[]
+  reviews        Review[]
+  reviewReports  ReviewReport[]
+  passwordResets PasswordResetToken[]
+
+  @@index([createdAt])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model Brand {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id              String        @id @default(cuid())
+  slug            String        @unique
+  name            String
+  model           String
+  description     String
+  price           Decimal       @db.Decimal(10, 2)
+  compareAtPrice  Decimal?      @db.Decimal(10, 2)
+  stock           Int           @default(0)
+  type            ProductType
+  gender          Gender
+  brandId         String
+  categoryId      String
+  rating          Float         @default(0)
+  reviewCount     Int           @default(0)
+  displayType     String
+  caseMaterial    String
+  strapMaterial   String
+  movement        String
+  dialColor       String
+  waterResistance Int
+  batteryLife     String?
+  compatibility   String?
+  warranty        String
+  caseSize        String
+  weightGrams     Float
+  colorOptions    String[]
+  strapOptions    String[]      @default([])
+  features        String[]
+  specs           Json
+  tags            String[]
+  isFeatured      Boolean       @default(false)
+  isTrending      Boolean       @default(false)
+  isBestSeller    Boolean       @default(false)
+  isNewArrival    Boolean       @default(false)
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  brand           Brand         @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images          ProductImage[]
+  cartItems       CartItem[]
+  wishlistItems   WishlistItem[]
+  orderItems      OrderItem[]
+  reviews         Review[]
+
+  @@index([categoryId, isActive])
+  @@index([brandId, isActive])
+  @@index([type, gender, isActive])
+  @@index([price])
+  @@index([createdAt])
+  @@index([isFeatured, isTrending, isBestSeller, isNewArrival])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  alt       String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  variant   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@index([productId])
+}
+
+model Wishlist {
+  id        String         @id @default(cuid())
+  userId    String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     WishlistItem[]
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlistId String
+  productId  String
+  createdAt  DateTime @default(now())
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([wishlistId, productId])
+  @@index([productId])
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  label      String   @default("Home")
+  fullName   String
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  country    String   @default("India")
+  postalCode String
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders     Order[]
+
+  @@index([userId, isDefault])
+}
+
+model Order {
+  id               String        @id @default(cuid())
+  orderNumber      String        @unique
+  userId           String
+  addressId        String?
+  addressSnapshot  Json
+  subtotal         Decimal       @db.Decimal(10, 2)
+  discount         Decimal       @db.Decimal(10, 2)
+  tax              Decimal       @db.Decimal(10, 2)
+  shipping         Decimal       @db.Decimal(10, 2)
+  total            Decimal       @db.Decimal(10, 2)
+  paymentStatus    PaymentStatus @default(PENDING)
+  status           OrderStatus   @default(PENDING)
+  paymentProvider  String?
+  paymentSessionId String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  user             User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  address          Address?      @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  items            OrderItem[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([paymentStatus, createdAt])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String?
+  productName String
+  productSlug String
+  imageUrl    String
+  quantity    Int
+  variant     String?
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  listPrice   Decimal  @db.Decimal(10, 2)
+  lineTotal   Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Review {
+  id          String       @id @default(cuid())
+  userId      String
+  productId   String
+  rating      Int
+  title       String
+  body        String
+  status      ReviewStatus @default(PUBLISHED)
+  reportCount Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  reports     ReviewReport[]
+
+  @@unique([userId, productId])
+  @@index([productId, status, createdAt])
+}
+
+model ReviewReport {
+  id        String   @id @default(cuid())
+  reviewId  String
+  userId    String
+  reason    String?
+  createdAt DateTime @default(now())
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([createdAt])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead, createdAt])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+}

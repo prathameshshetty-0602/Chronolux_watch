@@ -1,0 +1,45 @@
+export type StoreProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  model: string;
+  description: string;
+  price: number;
+  compareAtPrice: number | null;
+  stock: number;
+  type: string;
+  gender: string;
+  rating: number;
+  reviewCount: number;
+  displayType: string;
+  caseMaterial: string;
+  strapMaterial: string;
+  movement: string;
+  dialColor: string;
+  waterResistance: number;
+  batteryLife: string | null;
+  compatibility: string | null;
+  warranty: string;
+  caseSize: string;
+  weightGrams: number;
+  colorOptions: string[];
+  strapOptions: string[];
+  features: string[];
+  specs: Record<string, string>;
+  tags: string[];
+  isFeatured: boolean;
+  isTrending: boolean;
+  isBestSeller: boolean;
+  isNewArrival: boolean;
+  brand: { name: string; slug: string };
+  category: { name: string; slug: string };
+  images: { url: string; alt: string }[];
+};
+
+export type CartItem = {
+  id: string;
+  productId: string;
+  quantity: number;
+  variant?: string | null;
+  product: StoreProduct;
+};
